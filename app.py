@@ -9,6 +9,7 @@ load_dotenv()
 
 # Retrieve environment variables
 PORT = os.getenv("PORT")
+HOST = os.getenv("HOST")
 MONGO_URL = os.getenv("MONGO_URL")
 
 # Initialize Flask application
@@ -103,4 +104,4 @@ def fetch_data():
 
 if __name__ == "__main__":
     print(f"Application running on port {PORT}")
-    app.run("localhost", port=PORT)
+    app.run(HOST, port=PORT)
