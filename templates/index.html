@@ -3,9 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Github Actions</title>
+    <title>Fetch Data Every 15 Seconds</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    Hello World
+    <h1>Data from MongoDB</h1>
+    <div id="data-container"></div>
+
+    <script>
+        let last_time = new Date(0)
+        last_time = last_time.toUTCString();
+        function fetchData() {
+            $.ajax({
+                url: '/fetch_data?last_time=' + last_time,
+                method: 'GET',
+                success: function(response) {
+                    console.log(last_time)
+                    last_time = response.last_time
+                    response.data.forEach(function(item, index) {
+                        $('#data-container').append('<p>' + JSON.stringify(item) + '</p>');
+                    });
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+
+        // Fetch data every 15 seconds
+        setInterval(fetchData, 5000);
+
+        // Fetch data initially when the page loads
+        fetchData();
+    </script>
 </body>
 </html>
