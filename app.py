@@ -14,6 +14,16 @@ MONGO_URL = os.getenv("MONGO_URL")
 # Initialize Flask application
 app = Flask(__name__)
 
+@app.route("/")
+def main():
+    """
+    Render the index.html page.
+
+    Returns:
+        template: Home page of the application
+    """
+    return render_template("index.html")
+
 @app.route("/recieveEvents", methods=["POST"])
 def event_receiver():
     """
@@ -56,16 +66,6 @@ def event_receiver():
 
     return make_response({"status": 200, "message": "Event received successfully"})
 
-@app.route("/")
-def main():
-    """
-    Render the index.html page.
-
-    Returns:
-        template: Home page of the application
-    """
-    return render_template("index.html")
-
 @app.route('/fetch_data')
 def fetch_data():
     """
@@ -103,4 +103,4 @@ def fetch_data():
 
 if __name__ == "__main__":
     print(f"Application running on port {PORT}")
-    app.run("localhost", port=PORT, debug=True)
+    app.run("localhost", port=PORT)
