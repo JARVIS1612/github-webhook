@@ -10,7 +10,6 @@ load_dotenv()
 # Retrieve environment variables
 PORT = os.getenv("PORT")
 HOST = os.getenv("HOST")
-MONGO_URL = os.getenv("MONGO_URL")
 
 # Initialize Flask application
 app = Flask(__name__)
