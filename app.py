@@ -83,7 +83,7 @@ def fetch_data():
         return jsonify({"error": "Timestamp parameter is required"}), 400
 
     try:
-        if query_datetime == "Thu, 01 Jan 1970 00:00:00 GMT":
+        if query_param == "Thu, 01 Jan 1970 00:00:00 GMT":
             query_datetime = collection.find_one({}, sort=[("timestamp", 1)])
         else:
             query_datetime = datetime.strptime(query_param, "%a, %d %b %Y %H:%M:%S %Z")
