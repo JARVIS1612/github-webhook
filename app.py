@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, make_response, jsonify
 from dotenv import load_dotenv
 import os
 from db import collection
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Load environment variables
 load_dotenv()
@@ -83,9 +83,15 @@ def fetch_data():
         return jsonify({"error": "Timestamp parameter is required"}), 400
 
     try:
-        query_datetime = datetime.strptime(query_param, "%a, %d %b %Y %H:%M:%S %Z")
+        if query_datetime == "Thu, 01 Jan 1970 00:00:00 GMT":
+            query_datetime = collection.find_one({}, sort=[("timestamp", 1)])
+        else:
+            query_datetime = datetime.strptime(query_param, "%a, %d %b %Y %H:%M:%S %Z")
+        
+        end_datetime = query_datetime + timedelta(seconds=15)
+
         results = collection.find({
-            "timestamp": {"$gt": query_datetime}
+            "timestamp": {"$gte": query_datetime, "$lt": end_datetime}
         })
 
         result_list = []
@@ -94,7 +100,7 @@ def fetch_data():
             result_list.append(result)
 
         if result_list:
-            return jsonify({"data": result_list, "last_time": result_list[-1]['timestamp']})
+            return jsonify({"data": result_list, "last_time": end_datetime})
 
         return jsonify({"data": [], "last_time": query_param})
 
@@ -103,4 +109,4 @@ def fetch_data():
 
 if __name__ == "__main__":
     print(f"Application running on port {PORT}")
-    app.run(HOST, port=PORT)
+    app.run(HOST, port=PORT, debug=True)
