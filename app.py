@@ -85,6 +85,8 @@ def fetch_data():
     try:
         if query_param == "Thu, 01 Jan 1970 00:00:00 GMT":
             query_datetime = collection.find_one({}, sort=[("timestamp", 1)])
+            if query_datetime:
+                query_datetime = query_datetime['timestamp']
         else:
             query_datetime = datetime.strptime(query_param, "%a, %d %b %Y %H:%M:%S %Z")
         
